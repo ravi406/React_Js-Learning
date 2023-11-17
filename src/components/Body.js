@@ -1,6 +1,7 @@
 import RestaurentCard from "./RestaurentCard";
 import { useState,useEffect } from "react";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 
 
 const Body =() =>{
@@ -11,8 +12,8 @@ const Body =() =>{
   const [filteredListOfRestaurant,setFilteredRestaurant] = useState('');
 
   //whenever state variable changes react triggers a reconciliation cycle(re-render the component )
-  console.log('Body rendering..');
-  // console.log(listOfRestaurant);
+  console.log('Body rendering..',listOfRestaurant);
+ 
   
   useEffect(() => {  
     
@@ -23,6 +24,7 @@ const Body =() =>{
     const fetchData = async () =>{
         const data = await fetch('https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9686706&lng=77.5300547&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING');
         const json = await data.json();
+      
         setListOfRestaurant(json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants
           .map((res)=>res.info));
 
@@ -38,7 +40,7 @@ const Body =() =>{
     function clickHandler(){
       // filter out the restaurants based on the rating
       const filteredList = listOfRestaurant.filter((rest) => rest.avgRating > 4.2 );
-      setListOfRestaurant(filteredList);
+      setFilteredRestaurant(filteredList);
  
     }            
         
@@ -71,7 +73,8 @@ const Body =() =>{
             
             <div className='resto-container'>
               {
-                filteredListOfRestaurant.map(restaurant => <RestaurentCard key={restaurant.id} resData ={restaurant}/>)
+                filteredListOfRestaurant.map(restaurant => 
+                <Link key={restaurant.id} to={'/restaurants/'+restaurant.id}><RestaurentCard  resData ={restaurant}/></Link>)
               } 
                 
             </div>

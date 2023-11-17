@@ -1,16 +1,11 @@
 
 import { LOGO_URL } from "../../utils/constants";
-import { useState,useEffect } from "react";
+import { useState} from "react";
 import { Link } from "react-router-dom";
 
 const Header =() =>{
 
      const [btnName,setBtnName] = useState('Login');
-
-    useEffect(() => {console.log('useeffect called with every render')});
-    useEffect(() => {console.log('useeffect called with only one render')},[btnName]);
-
-   
 
     return(
         <div className='header'>
