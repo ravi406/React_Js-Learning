@@ -1,49 +1,44 @@
 import Shimmer from './Shimmer';
-import React from 'react'
-import { useEffect,useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { MENU_ID } from '../../utils/constants';
+import useRestaurantMenu from '../../utils/useRestaurantMenu';
+import RestaurantCategory from './RestaurantCategory';
 
 const RestaurantMenu = () => {
     
-    const[resInfo,setResInfo] = useState(null); 
+            const {resId} = useParams();
+
+            const resInfo = useRestaurantMenu(resId);
     
-    const {resId} =useParams();
-
-    console.log(resId)
-    
-
-    useEffect(() =>{
-        fetchMenu();
-    },[]);
-
-    const fetchMenu = async () =>{
-            const data = await fetch(MENU_ID+resId);
-            const json = await data.json();
-            setResInfo(json.data);
-
-    }
-
-            const {name,cuisines,locality} = resInfo?.cards[0]?.card?.card?.info || {};
+            const {name,cuisines,locality,costForTwo} = resInfo?.cards[0]?.card?.card?.info || {};
 
             const {itemCards} = resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card || {};
-           
             
-        if (resInfo === null) return <Shimmer/>
+            const category = resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card?.itemCards
+            .filter(
+                (c) => c.card?.['@type'] ==='type.googleapis.com/swiggy.presentation.food.v2.Dish')
+
+
+            // console.log("resmenu",resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card?.itemCards);
+           console.log('catuju',category)
+            if (resInfo === null) return <Shimmer/>
 
   return (
-        <div>
-             <h1>{name}</h1>
-            <h3>{cuisines.join(' ,  ')}</h3>
-            <p>CostForTwo: 450 Rs</p>
-            <p>{locality}</p>
+        <div className='text-center'>
+             <h1 className='font-bold my-6 text-2xl'>{name}</h1>
+            <h3 className='font-bold text-gray-500'>{cuisines.join(' ,  ')}</h3>
+            <p className='font-bold text-gray-500'>{costForTwo}</p>
+            <p className='font-bold my-6 text-2xl'>{locality}</p>
+            {/* category accordion  */}
+            {
+                category.map((cat,index)=>{
+                   return <RestaurantCategory 
+                   key={cat.id} 
+                   data={cat} 
+                   showItems= {index === 0 ? true : false}/>
+                })
+            }
             
-            <ul>
-                {
-                    itemCards.map((item)=><li key={item.card.info.id}>{ item.card.info.name} - {'  '+' Rs'}
-                    {item.card.info.price/100}</li>)
-                }        
-            </ul> 
         </div>
   )
 }

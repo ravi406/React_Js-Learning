@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Accordion from './Accordion';
 
- const Contact = () => {
+ const Contact = ({title,children}) => {
+
+  const [isActive, setIsActive] = useState(false);
   return (
-    <div>Contact us</div>
+    <div>
+      
+    <section className="panel">
+      <h3>{title}</h3>
+      { isActive ? (
+        <p>{children}</p>
+      ) : (
+        <button onClick={() => setIsActive(true)}>
+          Show
+        </button>
+      )
+      }
+    </section>
+    </div>
   )
 }
 
-export default Contact
+export default Contact;

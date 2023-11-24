@@ -26,3 +26,12 @@ Default: import/Export
 Named : import/Export
 -> export {name1, name2, ...} or export keyword infront of function name
 -> import {name1, name2, ...} from path;
+
+Redux toolkit
+
+- install @redux/toolkit
+  -build our store
+  -connect our store to our app
+  -slice(cart slice)
+  -dispatch(action)
+  -selector ( subscribe to store )
